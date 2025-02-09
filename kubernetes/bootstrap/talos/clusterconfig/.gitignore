@@ -1,0 +1,4 @@
+kubernetes-talos1-controlplane1.yaml
+kubernetes-talos1-controlplane2.yaml
+kubernetes-talos1-controlplane3.yaml
+talosconfig

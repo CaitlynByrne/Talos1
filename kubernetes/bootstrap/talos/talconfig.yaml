@@ -26,8 +26,7 @@ cniConfig:
 nodes:
   - hostname: "talos1-controlplane1"
     ipAddress: "172.17.17.11"
-    installDiskSelector:
-      serial: "sda"
+    installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
@@ -46,8 +45,7 @@ nodes:
           ip: "172.17.17.10"
   - hostname: "talos1-controlplane2"
     ipAddress: "172.17.17.12"
-    installDiskSelector:
-      serial: "sda"
+    installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
@@ -66,8 +64,7 @@ nodes:
           ip: "172.17.17.10"
   - hostname: "talos1-controlplane3"
     ipAddress: "172.17.17.13"
-    installDiskSelector:
-      serial: "sda"
+    installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
