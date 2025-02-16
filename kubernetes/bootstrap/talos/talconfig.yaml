@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.9.4
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.32.2
+
+clusterName: kubernetes
+endpoint: https://172.17.17.10:6443
+
+clusterPodNets:
+  - "10.69.0.0/16"
+clusterSvcNets:
+  - "10.96.0.0/16"
+
+additionalApiServerCertSans: &sans
+  - "172.17.17.10"
+  - "clustervip.talos1.4909.arachne.us"
+  - "127.0.0.1"
+additionalMachineCertSans: *sans
+
+# Disable built-in Flannel to use Cilium
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: "cl1cp1"
+    ipAddress: "172.17.17.11"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:69:5f:34"
+        dhcp: false
+        addresses:
+          - "172.17.17.11/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "172.17.17.254"
+        mtu: 1500
+        vip:
+          ip: "172.17.17.10"
+  - hostname: "cl1cp2"
+    ipAddress: "172.17.17.12"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:95:00:a9"
+        dhcp: false
+        addresses:
+          - "172.17.17.12/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "172.17.17.254"
+        mtu: 1500
+        vip:
+          ip: "172.17.17.10"
+  - hostname: "cl1cp3"
+    ipAddress: "172.17.17.13"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:95:ae:6b"
+        dhcp: false
+        addresses:
+          - "172.17.17.13/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "172.17.17.254"
+        mtu: 1500
+        vip:
+          ip: "172.17.17.10"
+  - hostname: "cl1w1"
+    ipAddress: "172.17.17.31"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:a0:9b:73"
+        dhcp: false
+        addresses:
+          - "172.17.17.31/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "172.17.17.254"
+        mtu: 1500
+  - hostname: "cl1w2"
+    ipAddress: "172.17.17.32"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:7c:70:94"
+        dhcp: false
+        addresses:
+          - "172.17.17.32/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "172.17.17.254"
+        mtu: 1500
+  - hostname: "cl1w3"
+    ipAddress: "172.17.17.33"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:1b:d9:9a"
+        dhcp: false
+        addresses:
+          - "172.17.17.33/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "172.17.17.254"
+        mtu: 1500
+
+# Global patches
+patches:
+  - "@./patches/global/machine-files.yaml"
+  - "@./patches/global/machine-kubelet.yaml"
+  - "@./patches/global/machine-network.yaml"
+  - "@./patches/global/machine-sysctls.yaml"
+  - "@./patches/global/machine-time.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./patches/controller/admission-controller-patch.yaml"
+    - "@./patches/controller/cluster.yaml"
+
