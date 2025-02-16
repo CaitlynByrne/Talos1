@@ -9,10 +9,12 @@ tasks:
     dir: '{{.TALHELPER_DIR}}'
     cmds:
       - '[ -f talsecret.sops.yaml ] || talhelper gensecret | sops --filename-override talos/talsecret.sops.yaml --encrypt /dev/stdin > talsecret.sops.yaml'
-      - talhelper genconfig
-      - talhelper gencommand apply --extra-flags="--insecure" | bash
-      - until talhelper gencommand bootstrap | bash; do sleep 10; done
-      - until talhelper gencommand kubeconfig --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
+      - talhelper genconfig -d
+      - talhelper gencommand apply -d --extra-flags="--insecure" | tee -a commands.txt | bash
+      - sleep 60
+      - talhelper gencommand bootstrap -d | tee -a commands.txt | bash
+      - sleep 60
+      - talhelper gencommand kubeconfig -d --extra-flags="{{.ROOT_DIR}} --force" | tee -a commands.txt | bash
     preconditions:
       - test -f {{.ROOT_DIR}}/.sops.yaml
       - test -f {{.SOPS_AGE_KEY_FILE}}
