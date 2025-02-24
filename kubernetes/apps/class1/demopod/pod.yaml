@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-minimal
+  namespace: ns-demopod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+  targetNamespace: ns-demopod
